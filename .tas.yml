@@ -1,19 +1,33 @@
----
-framework: jest
-postMerge:
-  pattern:
-    - 'packages/hoppscotch-app/**/__tests__/**/*.js'
-    - 'packages/hoppscotch-js-sandbox/src/__tests__/**/*.ts'
-  strategy:
-    threshold: <5|100s|30m|6h>
-    type: <commit|time>
-preMerge:
-  pattern:
-    - 'packages/hoppscotch-app/**/__tests__/**/*.js'
-    - 'packages/hoppscotch-js-sandbox/src/__tests__/**/*.ts'
-preRun:
-  - npm install -g pnpm
-  - pnpm install
-postRun:
-  - node --version
-version: 2.0
+postMerge :
+  preRun: 
+    command:
+      - pnpm install --shamefully-hoist=true 
+      - cp ./packages/hoppscotch-app/.env.example ./packages/hoppscotch-app/.env
+  subModules:    
+      - name: hoppscotch-app      
+        path : "./packages/hoppscotch-app/"
+        pattern: 
+          - "./**/__tests__/**/*.spec.js"
+        framework : jest
+        configFile : "./jest.config.js"
+      
+      - name: hoppscotch-cli      
+        path : "./packages/hoppscotch-cli/"
+        pattern: 
+          - "./src/__tests__/**/*.spec.ts"
+        framework : jest
+        preRun:
+          command:
+            - npm run prepublish
+            - npm run do-typecheck
+        configFile : "./jest.config.ts"
+        
+      - name: hoppscotch-app      
+        path : "./packages/hoppscotch-js-sandbox/"
+        pattern: 
+          - "./src/__tests__/**/*.spec.ts"
+        framework : jest
+        configFile : "./jest.config.js" 
+version : 2.0.0
+nodeVersion: 16.15.0
+tier: medium
