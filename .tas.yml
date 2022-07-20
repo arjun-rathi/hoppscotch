@@ -22,7 +22,7 @@ postMerge :
             - npm run do-typecheck
         configFile : "./jest.config.ts"
         
-      - name: hoppscotch-app      
+      - name: hoppscotch-sandbox      
         path : "./packages/hoppscotch-js-sandbox/"
         pattern: 
           - "./src/__tests__/**/*.spec.ts"
